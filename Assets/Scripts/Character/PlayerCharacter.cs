@@ -33,7 +33,14 @@ public class PlayerCharacter : Character
     public override void Initialize()
     {
         base.Initialize();
-        LiveComponent = new PlayerLiveComponent();
+
+        // базовый компонент
+        ILiveComponent baseLive = new PlayerLiveComponent();
+
+        // применяем пассивный скилл (Decorator)
+        ILiveComponent boostedLive = new HealthBoostDecorator(baseLive, 25);
+
+        LiveComponent = boostedLive;
         LiveComponent.Initialize(this);
 
         InputComponent = new PlayerInputComponent();

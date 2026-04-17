@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerLiveComponent : ILiveComponent
@@ -11,16 +9,20 @@ public class PlayerLiveComponent : ILiveComponent
     public event Action<Character> OnCharacterDeath;
     public event Action<float, int> OnHealthChanged;
 
-    private float health = 50f;
+    [SerializeField] private int maxHealth = 50;
+    private float health;
 
     public bool IsAlive => health > 0;
-    public int MaxHealth => 50;
+
+    public int MaxHealth => maxHealth;
+
     public float Health
     {
         get => health;
         private set
         {
             health = value;
+
             if (health <= 0)
             {
                 health = 0;
@@ -28,6 +30,12 @@ public class PlayerLiveComponent : ILiveComponent
                 SetDeath();
                 return;
             }
+
+            if (health > MaxHealth)
+            {
+                health = MaxHealth;
+            }
+
             OnHealthChanged?.Invoke(health, MaxHealth);
         }
     }
